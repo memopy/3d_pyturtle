@@ -1,6 +1,7 @@
 import turtle
 import keyboard
 import math
+from time import sleep
 
 screen = turtle.Screen()
 screen.tracer(0)
@@ -65,30 +66,30 @@ def draw_3d_tri(p1,p2,p3,color,filled:bool):
         if len(visible_v) == 3:
             draw_2d_tri(project_point(p1),project_point(p2),project_point(p3),color,filled)
         elif len(visible_v) == 2:
-            z_clip_A(p1,p2,p3,color,filled)
+            z_clip_A(*clipped_v,*visible_v,color,filled)
         elif len(visible_v) == 1:
-            z_clip_B(p1,p2,p3,color,filled)
+            z_clip_B(*clipped_v,*visible_v,color,filled)
         
 def z_clip_A(p1,p2,p3,color,filled:bool):
     x1,y1,z1,x2,y2,z2,x3,y3,z3 = (*p1,*p2,*p3)
-    z1 = (z2-1)/(z2-z1)
-    x1 = focal_length*(x2-((x2-x1)*z1))
-    y1 = focal_length*(y2-((y2-y1)*z1))
-    z2 = (z3-1)/(z3-z1)
-    x2 = focal_length*(x3-((x3-x1)*z2))
-    y2 = focal_length*(y3-((y3-y1)*z2))
-    draw_2d_tri((x1,y1),project_point((x2,y2,z2)),project_point((x3,y3,z3)),color,filled)
-    draw_2d_tri((x1,y1),(x2,y2),project_point((x3,y3,z3)),color,filled)
+    z1_ = (z2-1)/(z2-z1)
+    x1_ = focal_length*(x2-((x2-x1)*z1_))
+    y1_ = focal_length*(y2-((y2-y1)*z1_))
+    z2_ = (z3-1)/(z3-z1)
+    x2_ = focal_length*(x3-((x3-x1)*z2_))
+    y2_ = focal_length*(y3-((y3-y1)*z2_))
+    draw_2d_tri((x1_,y1_),project_point((x2,y2,z2)),project_point((x3,y3,z3)),color,filled)
+    draw_2d_tri((x1_,y1_),(x2_,y2_),project_point((x3,y3,z3)),color,filled)
 
 def z_clip_B(p1,p2,p3,color,filled:bool):
     x1,y1,z1,x2,y2,z2,x3,y3,z3 = (*p1,*p2,*p3)
-    z1 = (z3-1)/(z3-z1)
-    x1 = focal_length*(x3-((x3-x1)*z1))
-    y1 = focal_length*(y3-((y3-y1)*z1))
-    z2 = (z3-1)/(z3-z2+1/100**100)
-    x2 = focal_length*(x3-((x3-x2)*z2))
-    y2 = focal_length*(y3-((y3-y2)*z2))
-    draw_2d_tri((x1,y1),(x2,y2),project_point((x3,y3,z3)),color,filled)
+    z1_ = (z3-1)/(z3-z1)
+    x1_ = focal_length*(x3-((x3-x1)*z1_))
+    y1_ = focal_length*(y3-((y3-y1)*z1_))
+    z2_ = (z3-1)/(z3-z2)
+    x2_ = focal_length*(x3-((x3-x2)*z2_))
+    y2_ = focal_length*(y3-((y3-y2)*z2_))
+    draw_2d_tri((x1_,y1_),(x2_,y2_),project_point((x3,y3,z3)),color,filled)
 
 def transform_point(p):
     s_height = screen.window_height()
@@ -146,3 +147,4 @@ while True:
         pass
     draw_3d_tri((-100,-100,150),(100,-100,150),(100,110,150),"red",True)
     screen.update()
+    sleep(0.0001)
